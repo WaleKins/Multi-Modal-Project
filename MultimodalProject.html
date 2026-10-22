@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growing Together? Tomball's Development</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f7fa;
+    color:#333;
+}
+
+header{
+    background:linear-gradient(135deg,#1e88e5,#43a047);
+    color:white;
+    text-align:center;
+    padding:80px 20px;
+}
+
+section{
+    padding:40px 10%;
+}
+
+h2{
+    color:#1e88e5;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin:15px 0;
+    border-radius:10px;
+    box-shadow:0 3px 8px rgba(0,0,0,.1);
+}
+
+button{
+    background:#1e88e5;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:6px;
+    margin:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1565c0;
+}
+
+.quote-box{
+    min-height:70px;
+    margin-top:20px;
+}
+
+.simulator{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+.result{
+    font-size:18px;
+    margin-top:15px;
+}
+
+footer{
+    text-align:center;
+    background:#222;
+    color:white;
+    padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Growing Together?</h1>
+    <h3>Resident Perspectives on Tomball's Development</h3>
+
+    <p>
+        How do residents feel about Tomball's rapid growth and development?
+    </p>
+</header>
+
+<section>
+
+<h2>Introduction</h2>
+
+<div class="card">
+<p>
+Tomball has experienced significant development in recent years,
+including new housing, businesses, and community amenities.
+This project examines how local residents view these changes
+and what they believe it means for the city's future.
+</p>
+</div>
+
+</section>
+
+<section>
+
+<h2>Interactive Survey Results</h2>
+
+<button onclick="showGrowth()">Growth Opinion</button>
+<button onclick="showBenefits()">Benefits</button>
+<button onclick="showConcerns()">Concerns</button>
+
+<canvas id="chart"></canvas>
+
+</section>
+
+<section>
+
+<h2>Resident Quote Explorer</h2>
+
+<button onclick="showQuote('traffic')">Traffic</button>
+<button onclick="showQuote('economy')">Economy</button>
+<button onclick="showQuote('community')">Community</button>
+
+<div class="card quote-box" id="quoteBox">
+Click a category to view resident feedback.
+</div>
+
+</section>
+
+<section>
+
+<h2>Growth Impact Simulator</h2>
+
+<div class="simulator">
+
+<label>
+Population Growth:
+<span id="growthValue">50</span>%
+</label>
+
+<br><br>
+
+<input
+type="range"
+min="0"
+max="100"
+value="50"
+id="growthSlider"
+style="width:100%;"
+>
+
+<div class="result" id="results"></div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>Analysis</h2>
+
+<div class="card">
+
+<h3>Positive Themes</h3>
+
+<ul>
+<li>More businesses and restaurants</li>
+<li>Additional job opportunities</li>
+<li>Improved services and amenities</li>
+</ul>
+
+<h3>Negative Themes</h3>
+
+<ul>
+<li>Increased traffic congestion</li>
+<li>Loss of small-town atmosphere</li>
+<li>Growing housing costs</li>
+</ul>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>Conclusion</h2>
+
+<div class="card">
+Most residents recognize the economic benefits of Tomball's
+growth, but concerns remain regarding traffic and preserving
+community identity. Future development should balance economic
+progress with maintaining the qualities residents value most.
+</div>
+
+</section>
+
+<footer>
+Created by David Akinpelu
+</footer>
+
+<script>
+
+const ctx = document.getElementById("chart");
+
+let chart = new Chart(ctx,{
+type:"pie",
+data:{
+labels:["Yes","No","Unsure"],
+datasets:[{
+data:[65,20,15],
+backgroundColor:[
+"#43a047",
+"#e53935",
+"#fb8c00"
+]
+}]
+}
+});
+
+function updateChart(labels,data){
+
+chart.destroy();
+
+chart = new Chart(ctx,{
+type:"pie",
+data:{
+labels:labels,
+datasets:[{
+data:data,
+backgroundColor:[
+"#1e88e5",
+"#43a047",
+"#fb8c00",
+"#e53935"
+]
+}]
+}
+});
+}
+
+function showGrowth(){
+updateChart(
+["Yes","No","Unsure"],
+[65,20,15]
+);
+}
+
+function showBenefits(){
+updateChart(
+["Businesses","Jobs","Amenities"],
+[50,30,20]
+);
+}
+
+function showConcerns(){
+updateChart(
+["Traffic","Housing","Small-Town Feel"],
+[55,25,20]
+);
+}
+
+function showQuote(type){
+
+let quote = "";
+
+if(type==="traffic"){
+quote =
+'"I like the new businesses, but traffic has gotten worse."';
+}
+
+if(type==="economy"){
+quote =
+'"The growth has created more opportunities and shopping choices."';
+}
+
+if(type==="community"){
+quote =
+'"Tomball still feels like home despite the changes."';
+}
+
+document.getElementById("quoteBox").innerHTML = quote;
+}
+
+const slider =
+document.getElementById("growthSlider");
+
+const output =
+document.getElementById("results");
+
+slider.addEventListener("input",function(){
+
+let value = Number(slider.value);
+
+document.getElementById("growthValue")
+.innerText = value;
+
+let traffic =
+Math.min(100,value+20);
+
+let economy =
+Math.max(0,value);
+
+let community =
+100-value;
+
+output.innerHTML = `
+<b>Economic Impact:</b> ${economy}%<br>
+<b>Traffic Pressure:</b> ${traffic}%<br>
+<b>Community Feel:</b> ${community}%
+`;
+});
+
+slider.dispatchEvent(new Event("input"));
+
+</script>
+
+</body>
+</html>
